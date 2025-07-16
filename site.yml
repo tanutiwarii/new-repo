@@ -2,7 +2,7 @@
 - name: Run a variety of local Ansible tasks
   hosts: localhost
   connection: local
-  gather_facts: false
+  gather_facts: true
   tasks:
     # 1. File Operations
     - name: Create a file
