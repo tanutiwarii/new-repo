@@ -1,0 +1,61 @@
+---
+- name: Run a variety of local Ansible tasks
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    # 1. File Operations
+    - name: Create a file
+      file:
+        path: /tmp/hello_ansible.txt
+        state: touch
+
+    # 2. Install Packages (using apt as example, will only work on Ubuntu runners)
+    - name: Install cowsay using apt
+      apt:
+        name: cowsay
+        state: present
+      become: yes
+      when: ansible_facts['os_family'] == 'Debian'
+
+    # 4. Manage Services (example: cron)
+    - name: Ensure cron service is running
+      service:
+        name: cron
+        state: started
+      become: yes
+      when: ansible_facts['os_family'] == 'Debian'
+
+    # 5. Edit Configuration Files
+    - name: Add a line to the file
+      lineinfile:
+        path: /tmp/hello_ansible.txt
+        line: "This is a line added by Ansible."
+
+    # 6. Install Python Packages
+    - name: Install requests via pip
+      pip:
+        name: requests
+
+    # 7. Gather System Information
+    - name: Gather system facts
+      setup:
+
+    # 8. Download Files
+    - name: Download a file
+      get_url:
+        url: https://www.example.com/
+        dest: /tmp/example_index.html
+
+    # 9. Notify or Fail
+    - name: Print a debug message
+      debug:
+        msg: "All tasks completed successfully!"
+    - name: Assert that the file was created
+      assert:
+        that:
+          - ansible_facts['distribution'] is defined
+    - name: Fail intentionally if a variable is not defined
+      fail:
+        msg: "This is a demonstration failure because 'some_var' is not defined."
+      when: some_var is not defined 
