@@ -1,3 +1,4 @@
 streamlit
 langchain
 PyGithub
+azure-ai-inference
